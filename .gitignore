@@ -1,0 +1,14 @@
+# Python environment:
+.venv/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Data Files
+*.csv
+*.csv.gz
+*.parquet
+
+# OS
+.DS_Store
+Thumbs.db
