@@ -16,4 +16,4 @@ for year in range(current_year - 15, current_year - 1):
 full_df = pd.concat(df_list, ignore_index=True)
 
 # Converting the data frame to a csv file for later use
-full_df.to_csv(f"data/playbyplay_{current_year - 15}_{current_year - 1}.csv", index=False)
+full_df.to_csv(f"data/playbyplay_last_14_years.csv", index=False)
