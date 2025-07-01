@@ -4,9 +4,8 @@
 # Jupyter
 .ipynb_checkpoints
 
-# Data Files
-*.csv
-*.csv.gz
+# Ignore PBP Data
+data/playbyplay_last_14_years.csv
 *.parquet
 
 # OS
