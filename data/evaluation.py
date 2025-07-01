@@ -35,3 +35,4 @@ print(f"Tool Match Accuracy: {match_rate:.2%}")
 print(f"Success When Tool Followed: {success_when_matched:.2%}")
 print(f"Overall Success Rate: {actual_success:.2%}")
 
+df.to_csv("eval_results.csv", index=False)
