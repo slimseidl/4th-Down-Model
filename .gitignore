@@ -5,7 +5,7 @@
 .ipynb_checkpoints
 
 # Ignore PBP Data
-data/playbyplay_last_14_years.csv
+data/raw/playbyplay_last_14_years.csv
 *.parquet
 
 # OS

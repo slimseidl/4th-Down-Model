@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from decision import decide_ev_based
+from app.logic.decision import decide_ev_based
 import ast
 
 st.set_page_config(

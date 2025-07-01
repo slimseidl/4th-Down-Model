@@ -1,12 +1,12 @@
 import pandas as pd
-from decision_logic import decide_ev_based, load_decision_table
+from app.logic.decision_logic import decide_ev_based, load_decision_table
 
 
 # Loading Data
-df = pd.read_csv("C:/Users/jseidl/NFL-4th-Down/data/cleaned_4th_down.csv")
+df = pd.read_csv("C:/Users/jseidl/NFL-4th-Down/data/processed/cleaned_4th_down.csv")
 
 # Loading decision table
-decision_table = load_decision_table("C:/Users/jseidl/NFL-4th-Down/data/decision_table.csv")
+decision_table = load_decision_table("C:/Users/jseidl/NFL-4th-Down/data/processed/decision_table.csv")
 
 df['recommended'] = df.apply(lambda row: decide_ev_based(
     row['ydstogo'],
@@ -35,4 +35,4 @@ print(f"Tool Match Accuracy: {match_rate:.2%}")
 print(f"Success When Tool Followed: {success_when_matched:.2%}")
 print(f"Overall Success Rate: {actual_success:.2%}")
 
-df.to_csv("eval_results.csv", index=False)
+df.to_csv("C:/Users/jseidl/NFL-4th-Down/data/processed/eval_results.csv", index=False)
