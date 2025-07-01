@@ -64,9 +64,9 @@ with st.container():
     st.title("NFL 4th Down Decision: Coach vs. Model")
 
     # Inputs
-    ydstogo = st.number_input("Yards to Go", min_value=1, max_value=40, value=4)
-    yardline_100 = st.number_input("Field Position (yards from opponent's end zone)", min_value=1, max_value=99, value=45)
-    score_diff = st.number_input("Score Differential (your team - opponent)", value=0)
+    ydstogo = st.number_input("Yards to Go", help="Distance to First Down Marker", min_value=1, max_value=40, value=4)
+    yardline_100 = st.number_input("Field Position (yards from opponent's end zone)", help="99 yards from opposing end zone means you are on your own 1 yard line", min_value=1, max_value=99, value=45)
+    score_diff = st.number_input("Score Differential (team score - opponent score)", value=0)
 
     # Option for minutes and seconds or total seconds
     st.markdown("### Game Time Remaining")
