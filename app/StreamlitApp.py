@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from app.logic.decision import decide_ev_based
+from logic.decision_logic import decide_ev_based
 import ast
 
 st.set_page_config(
@@ -32,7 +32,7 @@ def parse_interval(interval_str):
                                'neither'))
 
 # Loading decision table
-decision_table = pd.read_csv("data/decision_table.csv")
+decision_table = pd.read_csv("data/processed/decision_table.csv")
 decision_table["yard_bin"] = decision_table["yard_bin"].apply(parse_interval)
 decision_table["distance_bin"] = decision_table["distance_bin"].apply(parse_interval)
 
