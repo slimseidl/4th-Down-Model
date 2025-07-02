@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 import os
 
-# Add the project root (NFL-4th-Down) to sys.path
+# Project root added to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.logic.decision_logic import decide_ev_based, load_decision_table
