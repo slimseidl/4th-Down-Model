@@ -4,21 +4,23 @@ import joblib
 from logic.decision_logic import decide_ev_based
 import ast
 
+# Setting up app page configuration with title and layout
 st.set_page_config(
     page_title="NFL 4th Down Decision Tool",
     layout="wide",  
     page_icon="🏈"
 )
 
-# Application Styling
+# Styling the application color scheme
 st.markdown(
     "<h1 style='color:#E31837; text-align:center;'>🏈 Fourth Down Decision Tool</h1>",
     unsafe_allow_html=True
 )
 
+# More styling
 st.markdown("<hr style='border:1px solid #E31837;'>", unsafe_allow_html=True)
 
-# Parse interval strings from CSV
+# Parse interval strings from CSV function
 def parse_interval(interval_str):
     left_bracket = interval_str[0]
     right_bracket = interval_str[-1]
@@ -31,15 +33,17 @@ def parse_interval(interval_str):
                                'right' if right_closed else 
                                'neither'))
 
-# Loading decision table
+# Loading decision table and parsing 
 decision_table = pd.read_csv("data/processed/decision_table.csv")
 decision_table["yard_bin"] = decision_table["yard_bin"].apply(parse_interval)
 decision_table["distance_bin"] = decision_table["distance_bin"].apply(parse_interval)
 
-# Loading trained model
+# Loading the trained Decision Tree Model
 model = joblib.load("data/tree_model.pkl")
 
-# Define prediction function
+# Definining the prediction function that takes user inputs
+# Uses same features as trained model
+# Returns a go / no go value as 1 / 0
 def predict_tree_decision(ydstogo, yardline_100, score_diff, game_sec_remain, qtr, posteam_timeouts, defteam_timeouts):
     input_df = pd.DataFrame([{
         "ydstogo": ydstogo,
@@ -53,28 +57,33 @@ def predict_tree_decision(ydstogo, yardline_100, score_diff, game_sec_remain, qt
     return model.predict(input_df)[0]
 
 
+# Creating a Streamlit container to group UI elements
 with st.container():
     st.markdown(
         "<div style='background-color:#1E1E1E; padding:20px; border-radius:10px;'>",
         unsafe_allow_html=True
     )
 
+    # Styling
     st.markdown("### <span style='color:#E31837;'>📋 Enter Values Below</span>", unsafe_allow_html=True)
 
     st.title("NFL 4th Down Decision: Coach vs. Model")
 
-    # Inputs
+    # Creating user inputs 
     ydstogo = st.number_input("Yards to Go", help="Distance to First Down Marker", min_value=1, max_value=40, value=4)
     yardline_100 = st.number_input("Field Position (yards from opponent's end zone)", help="99 yards from opposing end zone means you are on your own 1 yard line", min_value=1, max_value=99, value=45)
     score_diff = st.number_input("Score Differential (team score - opponent score)", value=0)
 
-    # Option for minutes and seconds or total seconds
+    # Splitting minutes / seconds into two columns for user input
     st.markdown("### Game Time Remaining")
     col_min, col_sec = st.columns(2)
+
+    # Limiting between 0/15 minutes and 1/59 seconds
     with col_min:
         minutes = st.number_input("Minutes", min_value=0, max_value=15, value=15, step=1)
     with col_sec:
         seconds = st.number_input("Seconds", min_value=0, max_value=59, value=0, step=1)
+    # Model trained with seconds, converting input to seconds    
     game_sec_remain = int(minutes * 60 + seconds)
 
     # Max time limits
@@ -83,12 +92,14 @@ with st.container():
         game_sec_remain = 900
     st.caption(f"Total Time Remaining: {game_sec_remain} seconds")
 
+    # Drop down box for selecting quarter and timeouts remaining per team
     quarter = st.selectbox("Quarter", options=[1, 2, 3, 4], index=3)
     posteam_timeouts = st.selectbox("Offensive Team Timeouts Remaining", options=[0, 1, 2, 3], index=3)
     defteam_timeouts = st.selectbox("Defensive Team Timeouts Remaining", options=[0, 1, 2, 3], index=3)
 
 
-# Button to compare
+# Creating button for output, coach decision tree vs. model
+# Clicking button simulates the play
 if st.button("Compare Coach vs. Model"):
     coach_decision = decide_ev_based(ydstogo, yardline_100, decision_table)
     model_decision = predict_tree_decision(ydstogo, yardline_100, score_diff, game_sec_remain, quarter, posteam_timeouts, defteam_timeouts)
@@ -101,6 +112,7 @@ if st.button("Compare Coach vs. Model"):
     st.markdown("<hr style='margin-top:40px; border: 1px solid #E31837;'>", unsafe_allow_html=True)
     st.markdown("### <span style='color:#E31837;'>📊 Decision Results</span>", unsafe_allow_html=True)
 
+    # Splitting results to two columns for side by side view
     col1, col2 = st.columns(2)
     col1.metric("Coach Decision", coach_decision.upper())
     col2.metric("Model Decision", "GO" if model_decision == 1 else "No Go")
@@ -109,7 +121,7 @@ if st.button("Compare Coach vs. Model"):
     col1.markdown(f"<h3 style='color:{coach_color};'>Coach: {coach_decision.upper()}</h3>", unsafe_allow_html=True)
     col2.markdown(f"<h3 style='color:{model_color};'>Model: {model_text}</h3>", unsafe_allow_html=True)
 
-
+    # Custom Footer
     st.markdown("""
     <div style='background-color:#E31837;padding:10px;border-radius:8px'>
         <h2 style='color:white;text-align:center;margin:0;'>Seidl 4th Down Analysis</h2>
