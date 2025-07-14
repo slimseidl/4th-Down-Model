@@ -1,5 +1,5 @@
 # nfl data from nflverse GitHub Repo gives access to historical play by play data
-from nfl_data_py import import_pbp_data
+from nfl_data_py import import_pbp_data # type: ignore
 import pandas as pd
 from datetime import datetime
 
